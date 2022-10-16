@@ -29,7 +29,7 @@ void List::insert_next(Node *current, Node *input)
     }
 }
 
-void List::insert(int input_value)
+void List::insert(int const input_value)
 {
     // Funktionen som användaren ser, för att dölja den inre strukruren i noderna
     Node *temp_node{new Node{input_value, nullptr}};
@@ -86,7 +86,7 @@ bool List::contains(int val)
     return (index_of(val) != -1);
 }
 
-int List::index_of(int val)
+int List::index_of(int const val)
 {
     int iterations{0};
     Node *current{head};
@@ -106,7 +106,7 @@ int List::index_of(int val)
     return -1;
 }
 
-int List::get(int i)
+int List::get(int const i)
 {
     if (i >= length)
     {
