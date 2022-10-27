@@ -1,74 +1,55 @@
 #include "list.h"
 #include <iostream>
 #include <sstream>
-//::
 
-void List::insert_next(Node *current, Node *input)
-{
-    // TODO: Avstöka
-    if (current->next == nullptr) // Om nuvarande nod är den sista
-    {
-        current->next = input; // Sätt nästa element till input-pekaren, länk skapas
-        input->next = nullptr; // Inputens nästa blir då "svansen"
-        return;
-    }
+void List::insert(int const number)
+{ //Med dubbelpekare krävs ingen abstrakterande hjälpfunktion
+    Node **tracer{&head};
+    Node *nodeptr{new Node{number, nullptr}}; //Pekaren till noden som ska insättas
+    while ((*tracer) && (*tracer)->value < number){ //Iterera fram tills tracern inte längre pekar på en nod med större värde
+        tracer = &(*tracer)->next;
 
-    else if (current->next->value >= input->value)
-    // Om
-    {
-        // std::cout << "debug: " << input->next << std::endl;
-        input->next = current->next; // [a]input[] => [a]ins[next]
-        // std::cout << "debug:" << input->next << std::endl;
-        current->next = input; // []current
-        return;
+    
+        
     }
-
-    else
-    {
-        insert_next(current->next, input); // Upprepa jämförelsen med nästa tal i listan
-    }
+    nodeptr->next = *tracer;
+    *tracer = nodeptr;
+    length++;
 }
 
-void List::insert(int const input_value)
+
+
+void List::remove(int const number)  //Tar ett värde som input
 {
-    // Funktionen som användaren ser, för att dölja den inre strukruren i noderna
-    Node *temp_node{new Node{input_value, nullptr}};
-    // Eftersom vår lista kommer ha obestämd storlek så vill vi inte skapa våra noder på stack
-    // new gör så att noden skapas i heap, vilket medför att den måste manuellt avallokeras(?)
-    if (head == nullptr)
-    {
-        head = temp_node;
+    Node **tracer{&head}; 
+    Node *to_remove{};
+    while ((*tracer) && (*tracer)->value != number){ //Iterera fram tills tracern inte längre pekar på en nod med större värde
+        tracer = &(*tracer)->next;
+}
+   to_remove = *tracer;
+   *tracer = (*tracer) -> next;
+   delete(to_remove);
+   to_remove = nullptr;
+}
+
+void List::destruct(){
+    if (!head){
+        return;
     }
-    else if (input_value < head->value)
-    {
-        temp_node->next = head;
-        head = temp_node;
-    }
-    else
-    {
-        insert_next(head, temp_node);
-        // För alla andra fall måste vi ha tillgång till nodstrukturen
-        // Därför skickar vi vidare noden till den privata funktionen.
-    }
-    length++;
+    remove((head)->value);
+    destruct();
 }
 
 std::string List::stringify()
 {
-    Node *current{head};
-    std::string output{"["};
-    if (is_empty())
-    {
-        return (output + "]");
-    }
-    output += std::to_string(current->value);
-    while (current->next != nullptr)
-    {
-        output += " -> ";
-        output += std::to_string(current->next->value);
-        current = current->next;
-    }
-    return (output + "]");
+   
+	Node **tracer{&head};
+    std::string str{"["};
+	while ((*tracer) -> next) {
+		str += std::to_string((*tracer)->value) + ", ";
+		tracer = &(*tracer)->next;
+	}
+    return str + std::to_string((*tracer)->value) + "]";
 }
 
 // List::List(const List& to_copy)
@@ -123,11 +104,22 @@ int List::get(int const i)
 int main()
 {
     List testat;
+     testat.insert(10);
+    testat.insert(12);
+    testat.insert(15);
+    testat.insert(5);
+    testat.remove(12);
+    testat.insert(6);
+    testat.insert(8);
+    
     std::cout << testat.is_empty() << std::endl;
     std::cout << "length: " << testat.length << std::endl;
     std::cout << testat.stringify() << std::endl;
-    std::cout << testat.index_of(0) << std::endl;
-
+    std::cout << testat.index_of(12) << std::endl;
+    std::cout << "...: " << std::endl;
+    testat.destruct();
+    std::cout << testat.is_empty() << std::endl;
+    /*
     std::cout << std::endl;
 
     testat.insert(5);
@@ -141,7 +133,7 @@ int main()
 
     std::cout << testat.get(2) << std::endl;
 
-    /*
+    
 
 
     std::cout << testat.stringify() << std::endl;

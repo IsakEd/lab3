@@ -9,7 +9,6 @@ private:
         Node *next; // Pekare till det länkade elementet
     };
 
-    void insert_next(Node *current, Node *insert); // Lägg till i listan
     Node *head{};
 
 public:
@@ -19,6 +18,8 @@ public:
     std::string stringify();
     // List(const List& to_copy); copy constructor
     int index_of(int const val);  // Hittar index(en) för ett tal i listan
-    int get(int i);               // hittar det i:te listelementet
+    int get(int const i);               // hittar det i:te listelementet
     bool contains(int const val); //
+    void remove(int const number);
+    void destruct();
 };
